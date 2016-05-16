@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!-- Load module store on page layout -->
+<html lang="en" ng-app="Trabformais">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Formais</title>
+
+    <!-- Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+	<div class="container" id="content" tabindex="-1" ng-controller="FormaisController as formais">
+		<div class="text-center">
+			<h1 align=”center">Trabalho Prático 1 - Linguagens Formais</h1> 
+			<h3> Participantes: Janaina, Juliana, Mateus, Pablo</h3> 
+			<img src="formais.gif" alt="Formais" height="200" width="250">
+		</div>
+		<div class="panel panel-primary">
+			<div class="panel-heading">Configuração</div>
+			<div class="panel-body">		
+				<form ng-submit="formais.gerarSentencas()">
+					<div class="row form-group">
+						<div class="col-md-3">
+							<label for="exampleInputEmail1">Variáveis Não Terminais:</label>
+						</div>
+						<div class="col-md-9">
+							<input type="text" id="nao_terminal" class="form-control" ng-model="formais.naoTerminais"/>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3">
+							<label for="exampleInputPassword1">Variáveis Terminais:</label>
+						</div>
+						<div class="col-md-9">
+							<input type="text" id="terminal" class="form-control" ng-model="formais.terminais"/>   
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3">
+							<label for="exampleInputFile">Símbolo de Produção:</label>
+						</div>
+						<div class="col-md-9">
+							<input type="text" id="simbolo_producao" class="form-control" ng-model="formais.simboloProducao">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3">
+							<label for="exampleInputFile">Símbolo de início de Produção:</label>
+						</div>
+						<div class="col-md-9">
+							<input type="text" id="simbolo_inicio" class="form-control" ng-model="formais.simboloInicioProducao">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3">
+							<label for="exampleInputFile">Conjunto de Produções:</label> 
+						</div>
+						<div class="col-md-9">
+							<textarea name=mytextarea cols=35 rows=4 align="left" class="form-control" ng-model="formais.conjuntoProducoes"></textarea>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3">
+							<label for="exampleInputFile">Número de sentenças a gerar:</label>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" ng-model="formais.numeroSentencas">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3">
+							<label for="exampleInputFile">Número máximo de derivações:</label>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" ng-model="formais.numeroMaximoDeDerivacoes">
+						</div>
+					</div>
+					<input type="submit" id="submit" value="Gerar Senteças" class="btn btn-primary" />
+				</form>
+		
+			</div>
+		</div>
+		<div class="panel panel-primary">
+			<div class="panel-heading">Geração</div>
+			<div class="panel-body">		
+				<form>
+					<div class="form-group">
+						<label for="exampleInputFile">Gramática Gerada:</label>
+						<div type="text" id="gramatica_gerada">
+							({ {{formais.naoTerminais}} }, { {{formais.terminais}} }, {{formais.simboloProducao}}, {{formais.simboloInicioProducao}} )
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Senteças Geradas:</label>
+						<div ng-repeat="valor in formais.listaSentencasGeradas track by $index">
+							<h4>{{valor}}</h4>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Tipo Gramática: {{formais.tipoGramatica}}</label>
+					</div>					
+					<div class="form-group">
+						<label for="exampleInputPassword1">Linguagem da Gramática: {{formais.linguagemDaGramatica}}</label>
+					</div>	
+				</form>		
+			</div>
+		</div>		
+		
+	</div>
+
+	<script src="angular.min.js"></script>
+	<script src="app.js"></script>
+	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </body>
+</html>
