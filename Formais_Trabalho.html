@@ -22,8 +22,8 @@
   <body>
 	<div class="container" id="content" tabindex="-1" ng-controller="FormaisController as formais">
 		<div class="text-center">
-			<h1 align=”center">Trabalho Prático 1 - Linguagens Formais</h1> 
-			<h3> Participantes: Janaina, Juliana, Mateus, Pablo</h3> 
+			<h1 align=”center">Trabalho Prático 1 - Compiladores</h1> 
+			<h3> Participantes: Douglas, Henrique e Mateus</h3> 
 			<img src="formais.gif" alt="Formais" height="200" width="250">
 		</div>
 		<div class="panel panel-primary">
@@ -70,22 +70,6 @@
 							<textarea name=mytextarea cols=35 rows=4 align="left" class="form-control" ng-model="formais.conjuntoProducoes"></textarea>
 						</div>
 					</div>
-					<div class="row form-group">
-						<div class="col-md-3">
-							<label for="exampleInputFile">Número de sentenças a gerar:</label>
-						</div>
-						<div class="col-md-9">
-							<input type="text" class="form-control" ng-model="formais.numeroSentencas">
-						</div>
-					</div>
-					<div class="row form-group">
-						<div class="col-md-3">
-							<label for="exampleInputFile">Número máximo de derivações:</label>
-						</div>
-						<div class="col-md-9">
-							<input type="text" class="form-control" ng-model="formais.numeroMaximoDeDerivacoes">
-						</div>
-					</div>
 					<input type="submit" id="submit" value="Gerar Senteças" class="btn btn-primary" />
 				</form>
 		
@@ -101,18 +85,6 @@
 							({ {{formais.naoTerminais}} }, { {{formais.terminais}} }, {{formais.simboloProducao}}, {{formais.simboloInicioProducao}} )
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="exampleInputPassword1">Senteças Geradas:</label>
-						<div ng-repeat="valor in formais.listaSentencasGeradas track by $index">
-							<h4>{{valor}}</h4>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="exampleInputPassword1">Tipo Gramática: {{formais.tipoGramatica}}</label>
-					</div>					
-					<div class="form-group">
-						<label for="exampleInputPassword1">Linguagem da Gramática: {{formais.linguagemDaGramatica}}</label>
-					</div>	
 				</form>		
 			</div>
 		</div>		
