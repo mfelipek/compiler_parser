@@ -14,13 +14,12 @@
         */
 
         //Gramatica Exemplo 2
-        /*
-        this.terminais = '+,*,i,(,)';
+
+        /*this.terminais = '+,*,i,(,)';
         this.naoTerminais = 'E,T,X,Y';
         this.simboloProducao = 'P';
         this.simboloInicioProducao = 'E';
-        this.conjuntoProducoes = 'E->TX\nT->(E)|iY|XY\nX->+E|&\nY->*T|&';
-*       /
+        this.conjuntoProducoes = 'E->TX\nT->(E)|iY|XY\nX->+E|&\nY->*T|&';*/
 
         //Gramatica Exemplo 3
         /*this.terminais = 't';
@@ -181,7 +180,7 @@
                     // caso for o ultimo elemento, nao há proximo elemento, por isso, nao precisa passar pela iteração
                     while (indexAtual < (producaoDoNaoTerminal.length -1)) {
 
-                        if (produzSentencaVazia(producaoDoNaoTerminal[indexAtual])) {
+                        if (formaisController.produzSentencaVazia(producaoDoNaoTerminal[indexAtual])) {
 
                             if (naoTerminal != producaoDoNaoTerminal[indexAtual]) {
                                 // Se ainda nao foi criada a lista FIRST daquele NT
@@ -208,23 +207,7 @@
 		}
 
 
-        function produzSentencaVazia(elemento){
-            // se for um terminal, método retorna false
-            if (formaisController.listaTerminais.indexOf( elemento ) > -1 ){
-                return false;
-            }
 
-            var producoes = formaisController.producoes[elemento];
-            for (var i=0; i < producoes.length; i++){
-                if (formaisController.caractereSentencaVazia == producoes[i]){
-                    return true;
-                }
-            }
-            return false;
-        }
-
-
-		
 		this.getFollow = function( naoTerminal ){
 			
 			// Inicializa lista de follow do NT
@@ -273,7 +256,32 @@
 							if( formaisController.listaFirstDeNaoTerminal[ proximoCaractereDoNaoTerminal ] == null ){
 								this.getFirst( proximoCaractereDoNaoTerminal );
 							}
-							formaisController.listaFollowDeNaoTerminal[naoTerminal] = formaisController.listaFollowDeNaoTerminal[naoTerminal].concat( formaisController.listaFirstDeNaoTerminal[ proximoCaractereDoNaoTerminal ] );							
+							formaisController.listaFollowDeNaoTerminal[naoTerminal] = formaisController.listaFollowDeNaoTerminal[naoTerminal].concat( formaisController.listaFirstDeNaoTerminal[ proximoCaractereDoNaoTerminal ] );
+
+                            //caso todos outros elementos a direita produzam sentença vazia, acontece o mesmo que se o elemento estivesse na ultima posicao
+
+                            var outrosElementos = producaoDoNaoTerminalAtual.substr( posicaoDoNaoTerminalNaProducao+1 , producaoDoNaoTerminalAtual.length);
+                            console.log('Todos outros elementos para o follow: ' + outrosElementos);
+                            var todosProduzemSentencaVazia = true;
+                            var index=0;
+                            while (todosProduzemSentencaVazia && index < outrosElementos.length){
+                                todosProduzemSentencaVazia = formaisController.produzSentencaVazia(outrosElementos.charAt(index));
+                                index++;
+                            }
+
+                            // caso todos produzem sentença vazia, deve buscar o FOLLOW do NTAtual e concatenar na lista do NT que se esta buscando
+                            if (todosProduzemSentencaVazia){
+                                if (naoTerminalAtual.indexOf(formaisController.chamadasFollow[naoTerminal]) == -1) {
+                                    if (formaisController.chamadasFollow[naoTerminal] == undefined){
+                                        formaisController.chamadasFollow[naoTerminal] = [];
+                                    }
+                                    formaisController.chamadasFollow[naoTerminal].push(naoTerminalAtual);
+                                    this.getFollow(naoTerminalAtual);
+                                    formaisController.listaFollowDeNaoTerminal[naoTerminal] = formaisController.listaFollowDeNaoTerminal[naoTerminal].concat(formaisController.listaFollowDeNaoTerminal[naoTerminalAtual]);
+                                }
+                            }
+
+
 						}
 					}				
 				}			
@@ -287,6 +295,21 @@
 		this.gerarTabelaPreditiva = function(){
 			return null;
 		}
+
+        this.produzSentencaVazia = function(elemento){
+            // se for um terminal, método retorna false
+            if (formaisController.listaTerminais.indexOf( elemento ) > -1 ){
+                return false;
+            }
+
+            var producoes = formaisController.producoes[elemento];
+            for (var i=0; i < producoes.length; i++){
+                if (formaisController.caractereSentencaVazia == producoes[i]){
+                    return true;
+                }
+            }
+            return false;
+        }
 		
 		this.retornarSomenteItensUnicosDeArray = function(a){
 			var seen = {};
