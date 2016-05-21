@@ -4,22 +4,38 @@
 	app.controller('FormaisController', function(){
 			
 			
-		/*
-		Gramatica Exemplo 1
-		this.terminais = 'a,b,&';
+
+		//Gramatica Exemplo 1
+		/*this.terminais = 'a,b,&';
 		this.naoTerminais = 'A,B,S';		
 		this.simboloProducao = 'P';
 		this.simboloInicioProducao = 'S';
 		this.conjuntoProducoes = 'S->AB|A|B\nA->a|Aa|&\nB->b|Bb';;
-		*/
+        */
 
+        //Gramatica Exemplo 2
+        /*
         this.terminais = '+,*,i,(,)';
-        this.naoTerminais = 'T,E,X,Y';
+        this.naoTerminais = 'E,T,X,Y';
         this.simboloProducao = 'P';
         this.simboloInicioProducao = 'E';
-        this.conjuntoProducoes = 'E->TX\nT->(E)|iY|XY\nX->+E|&\nY->*T|&';;
+        this.conjuntoProducoes = 'E->TX\nT->(E)|iY|XY\nX->+E|&\nY->*T|&';
+*       /
 
+        //Gramatica Exemplo 3
+        /*this.terminais = 't';
+        this.naoTerminais = 'A,B';
+        this.simboloProducao = 'P';
+        this.simboloInicioProducao = 'A';
+        this.conjuntoProducoes = 'A->tB|Bt\nB->tA|At';
+        */
 
+        // Gramatica Exemplo 4
+        this.terminais = '+,*,i,(,)';
+        this.naoTerminais = 'E,T,X,Y';
+        this.simboloProducao = 'P';
+        this.simboloInicioProducao = 'E';
+        this.conjuntoProducoes = 'E->TX\nT->(E)|iY\nX->+E|&\nY->*T|&';
 
         this.listaTerminais = [];
 		this.listaNaoTerminais = [];
@@ -28,6 +44,9 @@
 		
 		this.listaFirstDeNaoTerminal = [];
 		this.listaFollowDeNaoTerminal = [];
+
+        //estrutura auxiliar para ser usada no follow com objetivo de evitar recursividade
+        this.chamadasFollow = [];
 	
 		var formaisController = this;
 		
@@ -72,9 +91,9 @@
 					var naoTerminalAtual = this.listaNaoTerminais[i];
 					this.getFirst( naoTerminalAtual );
 					// Verifica se dentre a lista de first se tem sentenca vazia
-					/*if( this.listaFirstDeNaoTerminal[naoTerminalAtual].indexOf( this.caractereSentencaVazia ) > -1 ){
-						this.getFollow( naoTerminalAtual );
-					}*/
+					//if( this.listaFirstDeNaoTerminal[naoTerminalAtual].indexOf( this.caractereSentencaVazia ) > -1 ){
+					this.getFollow( naoTerminalAtual );
+					//}
 					
 					this.gerarTabelaPreditiva();			
 				}
@@ -84,8 +103,8 @@
 			console.log(this.producoes);
 			console.log('lista FIRST ');
 			console.log(this.listaFirstDeNaoTerminal);
-			//console.log('lista FOLLOW ');
-			//console.log(this.listaFollowDeNaoTerminal);
+			console.log('lista FOLLOW ');
+			console.log(this.listaFollowDeNaoTerminal);
 		}
 		
 		
@@ -224,7 +243,6 @@
 				var naoTerminalAtual = formaisController.listaNaoTerminais[y];
 				// Itera sobre as producoes do NT
 				for (var x = 0; x < formaisController.producoes[ naoTerminalAtual ].length; x++) {
-					
 					var producaoDoNaoTerminalAtual = formaisController.producoes[ naoTerminalAtual ][x];
 					
 					// Se existir na producao o NT
@@ -232,12 +250,19 @@
 					if( posicaoDoNaoTerminalNaProducao > -1 ){
 						
 						var proximoCaractereDoNaoTerminal = producaoDoNaoTerminalAtual.charAt( posicaoDoNaoTerminalNaProducao+1 );
-						
-						// Se nao existir proximo caractere, deve buscar o FOLLOW do NTAtual
+						// Se nao existir proximo caractere, deve buscar o FOLLOW do NTAtual e concatenar na lista do NT que se esta buscando
 						if( proximoCaractereDoNaoTerminal.length == 0 ){
-							this.getFollow( naoTerminalAtual );
-							formaisController.listaFollowDeNaoTerminal[naoTerminal] = formaisController.listaFollowDeNaoTerminal[naoTerminal].concat( formaisController.listaFollowDeNaoTerminal[ naoTerminalAtual ] );
-							
+
+                            if (naoTerminalAtual.indexOf(formaisController.chamadasFollow[naoTerminal]) == -1) {
+                                if (formaisController.chamadasFollow[naoTerminal] == undefined){
+                                    formaisController.chamadasFollow[naoTerminal] = [];
+                                }
+                                formaisController.chamadasFollow[naoTerminal].push(naoTerminalAtual);
+                                this.getFollow(naoTerminalAtual);
+                                formaisController.listaFollowDeNaoTerminal[naoTerminal] = formaisController.listaFollowDeNaoTerminal[naoTerminal].concat(formaisController.listaFollowDeNaoTerminal[naoTerminalAtual]);
+                            }
+
+
 						// Caso o proximo caractere for um terminal, só adiciona a lista
 						}else if( formaisController.listaTerminais.indexOf( proximoCaractereDoNaoTerminal ) > -1 ){
 							formaisController.listaFollowDeNaoTerminal[naoTerminal].push( proximoCaractereDoNaoTerminal );
