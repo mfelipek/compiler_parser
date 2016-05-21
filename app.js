@@ -4,13 +4,24 @@
 	app.controller('FormaisController', function(){
 			
 			
+		/*
+		Gramatica Exemplo 1
 		this.terminais = 'a,b,&';
 		this.naoTerminais = 'A,B,S';		
 		this.simboloProducao = 'P';
 		this.simboloInicioProducao = 'S';
 		this.conjuntoProducoes = 'S->AB|A|B\nA->a|Aa|&\nB->b|Bb';;
-		
-		this.listaTerminais = [];
+		*/
+
+        this.terminais = '+,*,i,(,)';
+        this.naoTerminais = 'T,E,X,Y';
+        this.simboloProducao = 'P';
+        this.simboloInicioProducao = 'E';
+        this.conjuntoProducoes = 'E->TX\nT->(E)|iY|XY\nX->+E|&\nY->*T|&';;
+
+
+
+        this.listaTerminais = [];
 		this.listaNaoTerminais = [];
 		
 		this.producoes = [];
@@ -61,20 +72,20 @@
 					var naoTerminalAtual = this.listaNaoTerminais[i];
 					this.getFirst( naoTerminalAtual );
 					// Verifica se dentre a lista de first se tem sentenca vazia
-					if( this.listaFirstDeNaoTerminal[naoTerminalAtual].indexOf( this.caractereSentencaVazia ) > -1 ){				
+					/*if( this.listaFirstDeNaoTerminal[naoTerminalAtual].indexOf( this.caractereSentencaVazia ) > -1 ){
 						this.getFollow( naoTerminalAtual );
-					}
+					}*/
 					
 					this.gerarTabelaPreditiva();			
 				}
-			}		
+			}
 			
 			console.log('TODAS PRODUCOES ');
 			console.log(this.producoes);
 			console.log('lista FIRST ');
 			console.log(this.listaFirstDeNaoTerminal);
-			console.log('lista FOLLOW ');
-			console.log(this.listaFollowDeNaoTerminal);		
+			//console.log('lista FOLLOW ');
+			//console.log(this.listaFollowDeNaoTerminal);
 		}
 		
 		
@@ -118,30 +129,82 @@
 				
 				var producaoDoNaoTerminal = formaisController.producoes[naoTerminal][x];			
 				
-				// Verifica se o primeiro caractere esta na lista de teminais ou é vazio
-				if( formaisController.listaTerminais.indexOf( producaoDoNaoTerminal[0] ) > -1 ||
-					 producaoDoNaoTerminal[0] == formaisController.caractereSentencaVazia
+				// Verifica se o primeiro caractere esta na lista de terminais ou é vazio
+				if( formaisController.listaTerminais.indexOf( producaoDoNaoTerminal[0] ) > -1
 				){
 					
 					// Adiciona na lista de first do NT
 					formaisController.listaFirstDeNaoTerminal[naoTerminal].push( producaoDoNaoTerminal[0] );
 					
 				// Como o primeiro caractere é um NT, verifica se o NT nao eh o mesmo que se esta criando o FIRST
-				}else if( naoTerminal != producaoDoNaoTerminal[0] ){
-					
-					// Se ainda nao foi criada a lista FIRST daquele NT
-					if( formaisController.listaFirstDeNaoTerminal[ producaoDoNaoTerminal[0] ] == null ){
-						this.getFirst( producaoDoNaoTerminal[0] );
-					}
-						
-					// Concatena na lista FIRST
-					formaisController.listaFirstDeNaoTerminal[naoTerminal] = formaisController.listaFirstDeNaoTerminal[naoTerminal].concat( formaisController.listaFirstDeNaoTerminal[ producaoDoNaoTerminal[0] ] );					
+				}else if( naoTerminal != producaoDoNaoTerminal[0] ||
+                    producaoDoNaoTerminal[0] == formaisController.caractereSentencaVazia){
+
+                    var indexAtual = 0;
+                    if (producaoDoNaoTerminal[0] != formaisController.caractereSentencaVazia) {
+                        // Se ainda nao foi criada a lista FIRST daquele NT
+                        if (formaisController.listaFirstDeNaoTerminal[producaoDoNaoTerminal[0]] == null) {
+                            this.getFirst(producaoDoNaoTerminal[0]);
+                        }
+
+                        // Concatena na lista FIRST
+                        formaisController.listaFirstDeNaoTerminal[naoTerminal] = formaisController.listaFirstDeNaoTerminal[naoTerminal].concat(formaisController.listaFirstDeNaoTerminal[producaoDoNaoTerminal[0]]);
+                    } else {
+                        // Adiciona na lista de first do NT
+                        formaisController.listaFirstDeNaoTerminal[naoTerminal].push( producaoDoNaoTerminal[0] );
+                        indexAtual = 1;
+                    }
+
+
+
+                    //se o NT atual gera sentença vazia, o FIRST do proximo elemento estara no first do atual
+                    //isto deve ser executado para todos elementos da producao do NT
+                    // caso for o ultimo elemento, nao há proximo elemento, por isso, nao precisa passar pela iteração
+                    while (indexAtual < (producaoDoNaoTerminal.length -1)) {
+
+                        if (produzSentencaVazia(producaoDoNaoTerminal[indexAtual])) {
+
+                            if (naoTerminal != producaoDoNaoTerminal[indexAtual]) {
+                                // Se ainda nao foi criada a lista FIRST daquele NT
+                                if (formaisController.listaFirstDeNaoTerminal[producaoDoNaoTerminal[indexAtual + 1]] == null) {
+                                    this.getFirst(producaoDoNaoTerminal[indexAtual + 1]);
+                                }
+                                formaisController.listaFirstDeNaoTerminal[naoTerminal] = formaisController.listaFirstDeNaoTerminal[naoTerminal].concat(formaisController.listaFirstDeNaoTerminal[producaoDoNaoTerminal[indexAtual + 1]]);
+                            } else {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                        indexAtual++;
+                    }
+
+
+
 				}
 			}
 			
 			// Retorna somente os itens unicos do array, remove valores duplicados
 			formaisController.listaFirstDeNaoTerminal[naoTerminal] = this.retornarSomenteItensUnicosDeArray(formaisController.listaFirstDeNaoTerminal[naoTerminal]);
 		}
+
+
+        function produzSentencaVazia(elemento){
+            // se for um terminal, método retorna false
+            if (formaisController.listaTerminais.indexOf( elemento ) > -1 ){
+                return false;
+            }
+
+            var producoes = formaisController.producoes[elemento];
+            for (var i=0; i < producoes.length; i++){
+                if (formaisController.caractereSentencaVazia == producoes[i]){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
 		
 		this.getFollow = function( naoTerminal ){
 			
