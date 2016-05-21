@@ -57,6 +57,7 @@
 			this.listaFirstDeNaoTerminal = [];
 			this.listaFollowDeNaoTerminal = [];
 			this.listaNaoTerminais = [];
+            this.chamadasFollow = [];
 			
 			this.listaTerminais = this.terminais.split(",");			
 			this.listaNaoTerminais = this.naoTerminais.split(",");
