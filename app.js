@@ -11,16 +11,16 @@
 		this.simboloProducao = 'P';
 		this.simboloInicioProducao = 'S';
 		this.conjuntoProducoes = 'S->AB|A|B\nA->a|Aa|&\nB->b|Bb';;
-        */
+        /*
 
         //Gramatica Exemplo 2
-
-        /*this.terminais = '+,*,i,(,)';
+        /*
+        this.terminais = '+,*,i,(,)';
         this.naoTerminais = 'E,T,X,Y';
         this.simboloProducao = 'P';
         this.simboloInicioProducao = 'E';
-        this.conjuntoProducoes = 'E->TX\nT->(E)|iY|XY\nX->+E|&\nY->*T|&';*/
-
+        this.conjuntoProducoes = 'E->TX\nT->(E)|iY|XY\nX->+E|&\nY->*T|&';
+*/
         //Gramatica Exemplo 3
         /*this.terminais = 't';
         this.naoTerminais = 'A,B';
@@ -35,6 +35,10 @@
         this.simboloProducao = 'P';
         this.simboloInicioProducao = 'E';
         this.conjuntoProducoes = 'E->TX\nT->(E)|iY\nX->+E|&\nY->*T|&';
+        
+        this.processado = false;
+
+
 
         this.listaTerminais = [];
 		this.listaNaoTerminais = [];
@@ -50,6 +54,8 @@
 		var formaisController = this;
 		
 		this.caractereSentencaVazia = '&';
+
+        this.tabelaPreditiva = [];
 		
 		this.gerarSentencas = function(){
 			this.listaTerminais = [];
@@ -66,7 +72,9 @@
 			
 			
 			this.gerarListaConjuntoProducoes();
-			
+
+            this.processado = true;
+
 		};
 		
 		this.gerarListaConjuntoProducoes = function(){
@@ -95,7 +103,6 @@
 					this.getFollow( naoTerminalAtual );
 					//}
 					
-					this.gerarTabelaPreditiva();			
 				}
 			}
 			
@@ -105,7 +112,13 @@
 			console.log(this.listaFirstDeNaoTerminal);
 			console.log('lista FOLLOW ');
 			console.log(this.listaFollowDeNaoTerminal);
-		}
+
+            this.gerarTabelaPreditiva();
+
+            console.log('tabela preditiva')
+            console.log(formaisController.tabelaPreditiva);
+
+        }
 		
 		
 		this.separarLinhasDasProducoes = function(){
@@ -294,6 +307,48 @@
 		}
 		
 		this.gerarTabelaPreditiva = function(){
+            for (var x=0; x < formaisController.listaNaoTerminais.length; x++){
+                var naoTerminal = formaisController.listaNaoTerminais[x];
+
+                //tratamento do FIRST
+                for (var y=0; y < formaisController.listaTerminais.length; y++){
+                    var terminal = formaisController.listaTerminais[y];
+
+                    if (formaisController.listaFirstDeNaoTerminal[naoTerminal].indexOf(terminal) > -1){
+                        console.log(terminal + 'esta no first de ' + naoTerminal);
+
+                        var producoes = formaisController.producoes[naoTerminal];
+                        for (var z=0; z < producoes.length; z++){
+                            var producao = producoes[z];
+
+                            //se a producao gera o first, é colocada nesta posição da tabela
+                            if(formaisController.producaoGeraTerminal(producao, terminal)){
+                                if (formaisController.tabelaPreditiva[naoTerminal] == undefined){
+                                    formaisController.tabelaPreditiva[naoTerminal] = [];
+                                }
+                                formaisController.tabelaPreditiva[naoTerminal][terminal] = producao;
+                            }
+                        }
+
+
+                    }
+                }
+
+                if (formaisController.produzSentencaVazia(naoTerminal)) {
+                    //tratamento do FOLLOW
+                    for (var y = 0; y < formaisController.listaFollowDeNaoTerminal[naoTerminal].length; y++) {
+                        var elementoFollow = formaisController.listaFollowDeNaoTerminal[naoTerminal][y];
+                        if (formaisController.tabelaPreditiva[naoTerminal] == undefined) {
+                            formaisController.tabelaPreditiva[naoTerminal] = [];
+                        }
+                        formaisController.tabelaPreditiva[naoTerminal][elementoFollow] = formaisController.caractereSentencaVazia;
+                    }
+                }
+
+
+            }
+
+
 			return null;
 		}
 
@@ -307,6 +362,35 @@
             for (var i=0; i < producoes.length; i++){
                 if (formaisController.caractereSentencaVazia == producoes[i]){
                     return true;
+                }
+            }
+            return false;
+        }
+
+        this.producaoGeraTerminal = function(producao, terminal){
+            for (var x=0; x < producao.length; x++){
+                var elemento = producao[x];
+
+                if (elemento == formaisController.caractereSentencaVazia){
+                    continue;
+                }
+                // se for um terminal, deve ser igual ao parametro
+                if (this.listaTerminais.indexOf(elemento) > -1){
+                    if (elemento == terminal){
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    // se esta no first do nao terminal, a producao gera este terminal
+                    if (this.listaFirstDeNaoTerminal[elemento].indexOf(terminal) > -1){
+                        return true;
+                    } else {
+                        // caso o terminal desejado nao esteja no first e nao gere sentenca vazia, a producao nao gera este terminal
+                        if (!this.produzSentencaVazia(elemento)){
+                            return false;
+                        }
+                    }
                 }
             }
             return false;

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- Load module store on page layout -->
 <html lang="en" ng-app="Trabformais">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,93 +10,103 @@
 
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
-  <body>
-	<div class="container" id="content" tabindex="-1" ng-controller="FormaisController as formais">
-		<div class="text-center">
-			<h1 align=”center">Trabalho Prático 1 - Compiladores</h1> 
-			<h3> Participantes: Douglas, Henrique e Mateus</h3> 
-			<img src="formais.gif" alt="Formais" height="200" width="250">
-		</div>
-		<div class="panel panel-primary">
-			<div class="panel-heading">Configuração</div>
-			<div class="panel-body">		
-				<form ng-submit="formais.gerarSentencas()">
-					<div class="row form-group">
-						<div class="col-md-3">
-							<label for="exampleInputEmail1">Variáveis Não Terminais:</label>
-						</div>
-						<div class="col-md-9">
-							<input type="text" id="nao_terminal" class="form-control" ng-model="formais.naoTerminais"/>
-						</div>
-					</div>
-					<div class="row form-group">
-						<div class="col-md-3">
-							<label for="exampleInputPassword1">Variáveis Terminais:</label>
-						</div>
-						<div class="col-md-9">
-							<input type="text" id="terminal" class="form-control" ng-model="formais.terminais"/>   
-						</div>
-					</div>
-					<div class="row form-group">
-						<div class="col-md-3">
-							<label for="exampleInputFile">Símbolo de Produção:</label>
-						</div>
-						<div class="col-md-9">
-							<input type="text" id="simbolo_producao" class="form-control" ng-model="formais.simboloProducao">
-						</div>
-					</div>
-					<div class="row form-group">
-						<div class="col-md-3">
-							<label for="exampleInputFile">Símbolo de início de Produção:</label>
-						</div>
-						<div class="col-md-9">
-							<input type="text" id="simbolo_inicio" class="form-control" ng-model="formais.simboloInicioProducao">
-						</div>
-					</div>
-					<div class="row form-group">
-						<div class="col-md-3">
-							<label for="exampleInputFile">Conjunto de Produções:</label> 
-						</div>
-						<div class="col-md-9">
-							<textarea name=mytextarea cols=35 rows=4 align="left" class="form-control" ng-model="formais.conjuntoProducoes"></textarea>
-						</div>
-					</div>
-					<input type="submit" id="submit" value="Processar" class="btn btn-primary" />
-				</form>
-		
-			</div>
-		</div>
-		<div class="panel panel-primary">
-			<div class="panel-heading">Geração</div>
-			<div class="panel-body">		
-				<form>
-					<div class="form-group">
-						<label for="exampleInputFile">Gramática Gerada:</label>
-						<div type="text" id="gramatica_gerada">
-							({ {{formais.naoTerminais}} }, { {{formais.terminais}} }, {{formais.simboloProducao}}, {{formais.simboloInicioProducao}} )
-						</div>
-					</div>
-				</form>		
-			</div>
-		</div>		
-		
-	</div>
+</head>
+<body>
+<div class="container" id="content" tabindex="-1" ng-controller="FormaisController as formais">
+    <div class="text-center">
+        <h1 align=”center">Trabalho Prático 1 - Compiladores</h1>
 
-	<script src="angular.min.js"></script>
-	<script src="app.js"></script>
-	
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  </body>
+        <h3> Participantes: Douglas, Henrique e Mateus</h3>
+        <img src="formais.gif" alt="Formais" height="200" width="250">
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Configuração</div>
+        <div class="panel-body">
+            <form ng-submit="formais.gerarSentencas()">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label for="exampleInputEmail1">Variáveis Não Terminais:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" id="nao_terminal" class="form-control" ng-model="formais.naoTerminais"/>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label for="exampleInputPassword1">Variáveis Terminais:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" id="terminal" class="form-control" ng-model="formais.terminais"/>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label for="exampleInputFile">Símbolo de Produção:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" id="simbolo_producao" class="form-control"
+                               ng-model="formais.simboloProducao">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label for="exampleInputFile">Símbolo de início de Produção:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" id="simbolo_inicio" class="form-control"
+                               ng-model="formais.simboloInicioProducao">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label for="exampleInputFile">Conjunto de Produções:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <textarea name=mytextarea cols=35 rows=4 align="left" class="form-control"
+                                  ng-model="formais.conjuntoProducoes"></textarea>
+                    </div>
+                </div>
+                <input type="submit" id="submit" value="Processar" class="btn btn-primary"/>
+            </form>
+
+        </div>
+    </div>
+    <div class="panel panel-primary" ng-show="formais.processado">
+        <div class="panel-heading">Tabela</div>
+        <div class="panel-body">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <th></th>
+                    <th ng-repeat="terminal in formais.listaTerminais">{{terminal}}</th>
+                    <th>$</th>
+                </thead>
+                <tr ng-repeat="naoTerminal in formais.listaNaoTerminais">
+                    <th>{{naoTerminal}}</th>
+                    <td ng-repeat="terminal in formais.listaTerminais">
+                        {{formais.tabelaPreditiva[naoTerminal][terminal]}}
+                    </td>
+                    <td>{{formais.tabelaPreditiva[naoTerminal]['$']}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="angular.min.js"></script>
+<script src="app.js"></script>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
 </html>
