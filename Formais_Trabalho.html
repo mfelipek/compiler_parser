@@ -99,6 +99,44 @@
         </div>
     </div>
 
+    <div class="panel panel-primary" ng-show="formais.processado">
+        <div class="panel-heading">Sentença</div>
+        <div class="panel-body">
+            <form ng-submit="formais.processarSentenca()">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label for="sentenca">Sentença:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" id="sentenca" class="form-control"
+                               ng-model="formais.sentenca">
+                    </div>
+                </div>
+                <input type="submit" id="submit" value="Processar Sentença" class="btn btn-primary"/>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="panel panel-primary" ng-show="formais.sentencaProcessada">
+        <div class="panel-heading">Pilha</div>
+        <div class="panel-body">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <th>Pilha</th>
+                    <th>Entrada</th>
+                    <th>Ação</th>
+                </thead>
+                <tr ng-repeat="registro in formais.pilha">
+                    <td>{{registro.pilha}}</td>
+                    <td>{{registro.entrada}}</td>
+                    <td>{{registro.acao}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 <script src="angular.min.js"></script>

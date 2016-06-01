@@ -37,11 +37,14 @@
         this.conjuntoProducoes = 'E->TX\nT->(E)|iY\nX->+E|&\nY->*T|&';
         
         this.processado = false;
+        this.sentencaProcessada = false;
 
-
+        this.sentenca = 'i*i';
 
         this.listaTerminais = [];
 		this.listaNaoTerminais = [];
+
+        this.pilha = [];
 		
 		this.producoes = [];
 		
@@ -54,6 +57,7 @@
 		var formaisController = this;
 		
 		this.caractereSentencaVazia = '&';
+        this.caractereFimProducao = '$';
 
         this.tabelaPreditiva = [];
 		
@@ -351,6 +355,59 @@
 
 			return null;
 		}
+
+        this.processarSentenca = function(){
+            formaisController.pilha = [];
+
+            erro = false;
+
+            var sentencaAux = formaisController.sentenca + formaisController.caractereFimProducao;
+            var pilhaAux = formaisController.simboloInicioProducao + formaisController.caractereFimProducao;
+
+            do {
+                var registroAtual = new Object();
+                registroAtual.pilha = pilhaAux;
+                registroAtual.entrada = sentencaAux;
+
+                var pilhaProcessar = formaisController.obterPrimeiroElemento(registroAtual.pilha);
+                var entradaProcessar = formaisController.obterPrimeiroElemento(registroAtual.entrada);
+
+                if (entradaProcessar == pilhaProcessar){
+                    sentencaAux = sentencaAux.substr( 1, sentencaAux.length);
+                    pilhaAux = pilhaAux.substr( 1, pilhaAux.length);
+                    if (entradaProcessar == formaisController.caractereFimProducao){
+                        registroAtual.acao = 'ACEITA';
+                    } else {
+                        registroAtual.acao = 'terminal';
+                    }
+
+                } else {
+                    registroAtual.acao = formaisController.tabelaPreditiva[pilhaProcessar][entradaProcessar];
+
+                    if (registroAtual.acao == '' || registroAtual.acao == undefined){
+                        erro = true;
+                        registroAtual.acao = "ERRO, não há referencia para " + pilhaProcessar + " e entrada " + entradaProcessar;
+                    } else {
+                        if (registroAtual.acao == formaisController.caractereSentencaVazia){
+                            registroAtual.acao = '';
+                        }
+                        pilhaAux = registroAtual.acao + pilhaAux.substr( 1, pilhaAux.length);
+                        if (registroAtual.acao == ''){
+                            registroAtual.acao = formaisController.caractereSentencaVazia;
+                        }
+                    }
+                }
+
+
+                formaisController.pilha.push(registroAtual);
+            } while ((registroAtual.pilha != formaisController.caractereFimProducao || registroAtual.entrada != formaisController.caractereFimProducao) && !erro)
+
+            formaisController.sentencaProcessada = true;
+        }
+
+        this.obterPrimeiroElemento = function(string){
+            return string[0];
+        }
 
         this.produzSentencaVazia = function(elemento){
             // se for um terminal, método retorna false
