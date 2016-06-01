@@ -77,8 +77,6 @@
 			
 			this.gerarListaConjuntoProducoes();
 
-            this.processado = true;
-
 		};
 		
 		this.gerarListaConjuntoProducoes = function(){
@@ -117,7 +115,9 @@
 			console.log('lista FOLLOW ');
 			console.log(this.listaFollowDeNaoTerminal);
 
-            this.gerarTabelaPreditiva();
+
+            this.processado = this.gerarTabelaPreditiva();
+
 
             console.log('tabela preditiva')
             console.log(formaisController.tabelaPreditiva);
@@ -311,6 +311,15 @@
 		}
 		
 		this.gerarTabelaPreditiva = function(){
+            // if any entry is multiple defined, then the grammar is not LL(1)
+            // usando esta logica, caso alguma entrada ja estiver definida no momento de adicionar na tabela
+            // esta gramatica não será LL(1)
+            var gramaticaLL1 = true;
+
+
+            formaisController.tabelaPreditiva = [];
+
+
             for (var x=0; x < formaisController.listaNaoTerminais.length; x++){
                 var naoTerminal = formaisController.listaNaoTerminais[x];
 
@@ -330,6 +339,9 @@
                                 if (formaisController.tabelaPreditiva[naoTerminal] == undefined){
                                     formaisController.tabelaPreditiva[naoTerminal] = [];
                                 }
+                                if ( formaisController.tabelaPreditiva[naoTerminal][terminal] != undefined){
+                                    gramaticaLL1 = false;
+                                }
                                 formaisController.tabelaPreditiva[naoTerminal][terminal] = producao;
                             }
                         }
@@ -345,6 +357,10 @@
                         if (formaisController.tabelaPreditiva[naoTerminal] == undefined) {
                             formaisController.tabelaPreditiva[naoTerminal] = [];
                         }
+
+                        if ( formaisController.tabelaPreditiva[naoTerminal][elementoFollow] != undefined){
+                            gramaticaLL1 = false;
+                        }
                         formaisController.tabelaPreditiva[naoTerminal][elementoFollow] = formaisController.caractereSentencaVazia;
                     }
                 }
@@ -352,8 +368,11 @@
 
             }
 
-
-			return null;
+            if (!gramaticaLL1){
+                alert('Esta gramatica não é LL(1)');
+                return false;
+            }
+			return true;
 		}
 
         this.processarSentenca = function(){
