@@ -11,7 +11,7 @@
 		this.simboloProducao = 'P';
 		this.simboloInicioProducao = 'S';
 		this.conjuntoProducoes = 'S->AB|A|B\nA->a|Aa|&\nB->b|Bb';;
-        /*
+        */
 
         //Gramatica Exemplo 2
         /*
@@ -20,14 +20,14 @@
         this.simboloProducao = 'P';
         this.simboloInicioProducao = 'E';
         this.conjuntoProducoes = 'E->TX\nT->(E)|iY|XY\nX->+E|&\nY->*T|&';
-*/
+        */
         //Gramatica Exemplo 3
         /*this.terminais = 't';
         this.naoTerminais = 'A,B';
         this.simboloProducao = 'P';
         this.simboloInicioProducao = 'A';
         this.conjuntoProducoes = 'A->tB|Bt\nB->tA|At';
-        */
+*/
 
         // Gramatica Exemplo 4
         this.terminais = '+,*,i,(,)';
@@ -35,7 +35,24 @@
         this.simboloProducao = 'P';
         this.simboloInicioProducao = 'E';
         this.conjuntoProducoes = 'E->TX\nT->(E)|iY\nX->+E|&\nY->*T|&';
-        
+
+
+        // Gramatica Exemplo 5
+        /*this.terminais = 'i,p,n,(,+,;,=';
+        this.naoTerminais = 'P,C,E';
+        this.simboloProducao = 'P';
+        this.simboloInicioProducao = 'P';
+        this.conjuntoProducoes = 'P->c;p|&\nC->i=E|pE\nE->i|n|(E+E)';*/
+        /*PROG -> CMD ; PROG
+        PROG ->
+        CMD -> id = EXP
+        CMD -> print EXP
+        EXP -> id
+        EXP -> num
+        EXP -> ( EXP + EXP )
+        */
+
+
         this.processado = false;
         this.sentencaProcessada = false;
 
