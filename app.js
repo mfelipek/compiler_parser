@@ -109,7 +109,17 @@
 					this.separarConjuntoDeSentencasParaladoEsquerdo( listaDeLinhasDasProducoes[i].slice(0,listaDeLinhasDasProducoes[i].indexOf('->')), listaDeLinhasDasProducoes[i].slice(listaDeLinhasDasProducoes[i].indexOf('->')+2,listaDeLinhasDasProducoes[i].length) );
 				}			
 			}
-			
+
+            console.log('TODAS PRODUCOES ');
+            console.log(this.producoes);
+
+            if (formaisController.temRecursaoAEsquerda()){
+                alert('Esta gramatica não é LL(1). Tem recursão a esquerda.');
+                return;
+            }
+
+
+
 			// Iteracao sobre a lista de NT, busca o FIRST, se conter vazio, gera o follow
 			for (i = 0; i < this.listaNaoTerminais.length; i++) {
 				
@@ -125,8 +135,7 @@
 				}
 			}
 			
-			console.log('TODAS PRODUCOES ');
-			console.log(this.producoes);
+
 			console.log('lista FIRST ');
 			console.log(this.listaFirstDeNaoTerminal);
 			console.log('lista FOLLOW ');
@@ -139,6 +148,25 @@
             console.log('tabela preditiva')
             console.log(formaisController.tabelaPreditiva);
 
+        }
+
+        this.temRecursaoAEsquerda = function(){
+            // Iteracao sobre a lista de NT, caso o primeiro elemento de alguma producao for ele mesmo, esta gramatica
+            // tem recursao a esquerda
+            var temRecursaoAEsquerda = false;
+
+            for (i = 0; i < formaisController.listaNaoTerminais.length; i++) {
+                var naoTerminalAtual = this.listaNaoTerminais[i];
+                for (y=0; y < formaisController.producoes[naoTerminalAtual].length; y++){
+                    var producaoAtual = formaisController.producoes[naoTerminalAtual][y];
+                    var primeiroElemento = formaisController.obterPrimeiroElemento(producaoAtual);
+                    if (primeiroElemento == naoTerminalAtual){
+                        temRecursaoAEsquerda = true;
+                        break;
+                    }
+                }
+            }
+            return temRecursaoAEsquerda;
         }
 		
 		
